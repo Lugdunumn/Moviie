@@ -1,0 +1,19 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    
+    <dimen name="activity_movie_detail_title_left_margin">64dp</dimen>
+    <dimen name="activity_movie_detail_title_bottom_margin">48dp</dimen>
+
+    <dimen name="activity_movie_detail_score_star_margin">4dp</dimen>
+    <dimen name="activity_movie_detail_score_left_margin">4dp</dimen>
+    <dimen name="activity_movie_detail_watched_case_left_margin">8dp</dimen>
+    <dimen name="activity_movie_detail_watched_left_margin">4dp</dimen>
+    
+    <dimen name="activity_movie_detail_desp_left_margin">16dp</dimen>
+    <dimen name="activity_movie_detail_desp_right_margin">16dp</dimen>
+    <dimen name="activity_movie_detail_desp_bottom_margin">8dp</dimen>
+    
+</resources>
