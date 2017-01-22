@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">Moviie</string>
 
+    <string name="retry_load">Réessayer</string>
+
+    <string name="movie_title">Films</string>
+    
+    <string name="tab_title_popular">Populaires</string>
+    <string name="tab_title_toprated">Mieux notés</string>
+    <string name="tab_title_upcoming">À venir</string>
+
+    <string name="no_saved_movie">Aucun film à afficher</string>
+
+    <string name="spinner_all_movie">Tous mes films</string>
+    <string name="spinner_movie_not_seen">Films à voir</string>
+    <string name="spinner_movie_seen">Films déjà vu</string>
+
+    <string name="menu_about">À propos</string>
+    <string name="notice">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="developer">Développé par Yuheng Zhao.</string>
 
     <string name="movie_desp">Movie description here.</string>
     <string name="synopsis">Synopsis</string>

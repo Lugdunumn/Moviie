@@ -2,8 +2,16 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    
-    
+
+    <dimen name="activity_my_movie_title_size">20sp</dimen>
+    <dimen name="padding_size">4dp</dimen>
+    <dimen name="fab_spacing">16dp</dimen>
+    <dimen name="normal_text_size">16sp</dimen>
+
+    <dimen name="activity_movie_cardview_margin">8dp</dimen>
+    <dimen name="activity_movie_imageview_height">250dp</dimen>
+    <dimen name="activity_movie_button_margin">16dp</dimen>
+
     <dimen name="activity_movie_detail_title_left_margin">64dp</dimen>
     <dimen name="activity_movie_detail_title_bottom_margin">48dp</dimen>
 
@@ -11,9 +19,15 @@
     <dimen name="activity_movie_detail_score_left_margin">4dp</dimen>
     <dimen name="activity_movie_detail_watched_case_left_margin">8dp</dimen>
     <dimen name="activity_movie_detail_watched_left_margin">4dp</dimen>
-    
+
     <dimen name="activity_movie_detail_desp_left_margin">16dp</dimen>
     <dimen name="activity_movie_detail_desp_right_margin">16dp</dimen>
     <dimen name="activity_movie_detail_desp_bottom_margin">8dp</dimen>
     
+    <dimen name="activity_about_margin_top_bottom">8dp</dimen>
+    <dimen name="activity_about_margin_left_right">16dp</dimen>
+    <dimen name="activity_about_logo_width">100dp</dimen>
+    <dimen name="activity_about_text_size">16sp</dimen>
+
+    s
 </resources>

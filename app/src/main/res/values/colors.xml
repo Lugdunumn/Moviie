@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="textColorPrimary">#3F51B5</color>
+    
+    <color name="seenStatusTint">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
 </resources>
