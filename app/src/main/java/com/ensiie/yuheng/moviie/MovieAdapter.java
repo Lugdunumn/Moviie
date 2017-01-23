@@ -1,9 +1,6 @@
 package com.ensiie.yuheng.moviie;
 
-import android.content.ClipData;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

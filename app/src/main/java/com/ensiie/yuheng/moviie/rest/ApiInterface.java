@@ -24,8 +24,8 @@ public interface ApiInterface {
 
     @GET("movie/upcoming")
     Call<MovieResponse> getUpcomingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int pageNumber, @Query("region") String region);
-
+    /*
     @GET("movie/{id}")
-    Call<MovieResponse> getMovieDetail(@Path("id") int id, @Query("api_key") String apiKey);
+    Call<MovieResponse> getMovieDetail(@Path("id") int id, @Query("api_key") String apiKey);*/
 
 }

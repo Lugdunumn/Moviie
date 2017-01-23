@@ -1,9 +1,7 @@
 package com.ensiie.yuheng.moviie;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -100,27 +98,27 @@ public class MovieDetailActivity extends AppCompatActivity {
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (MovieDetailActivity.this.checkBoxWatched.getVisibility() == View.VISIBLE) {
-                new DeleteMovieToWatchTask().execute(new Movie[]{MovieDetailActivity.this.movie});
+                new DeleteMovieToWatchTask().execute(MovieDetailActivity.this.movie);
                 return;
             }
-            new AddMovieToWatchTask().execute(new Movie[]{MovieDetailActivity.this.movie});
+            new AddMovieToWatchTask().execute(MovieDetailActivity.this.movie);
         }
     };
 
     CompoundButton.OnCheckedChangeListener checkBoxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             MovieDetailActivity.this.movie.setWatched(isChecked);
-            new UpdateMovieTask().execute(new Movie[]{MovieDetailActivity.this.movie});
+            new UpdateMovieTask().execute(MovieDetailActivity.this.movie);
         }
     };
 
     public class AddMovieToWatchTask extends AsyncTask<Movie, Void, Long> {
         protected Long doInBackground(Movie... params) {
-            return Long.valueOf(MovieDetailActivity.this.databaseHelper.addMovie(params[0]));
+            return MovieDetailActivity.this.databaseHelper.addMovie(params[0]);
         }
 
-        protected void onPostExecute(Long res) {
-            if (res.longValue() != -1) {
+        protected void onPostExecute(Long ret) {
+            if (ret != -1) {
                 MovieDetailActivity.this.fab.setImageResource(R.drawable.ic_delete_black_24dp);
                 MovieDetailActivity.this.checkBoxWatched.setVisibility(View.VISIBLE);
                 return;
@@ -131,11 +129,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public class DeleteMovieToWatchTask extends AsyncTask<Movie, Void, Integer> {
         protected Integer doInBackground(Movie... params) {
-            return Integer.valueOf(MovieDetailActivity.this.databaseHelper.deleteMovie(params[0]));
+            return MovieDetailActivity.this.databaseHelper.deleteMovie(params[0]);
         }
 
-        protected void onPostExecute(Integer res) {
-            if (res.intValue() == 0) {
+        protected void onPostExecute(Integer ret) {
+            if (ret == 0) {
                 MovieDetailActivity.this.fab.setImageResource(R.drawable.ic_delete_black_24dp);
                 MovieDetailActivity.this.checkBoxWatched.setVisibility(View.VISIBLE);
                 return;
@@ -147,7 +145,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public class GetMovieTask extends AsyncTask<Integer, Void, Movie> {
         protected Movie doInBackground(Integer... params) {
-            return MovieDetailActivity.this.databaseHelper.getMovie(params[0].intValue());
+            return MovieDetailActivity.this.databaseHelper.getMovie(params[0]);
         }
 
         protected void onPostExecute(Movie res) {
@@ -163,17 +161,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public class UpdateMovieTask extends AsyncTask<Movie, Void, Integer> {
         protected Integer doInBackground(Movie... params) {
-            return Integer.valueOf(MovieDetailActivity.this.databaseHelper.updateMovie(params[0]));
+            return MovieDetailActivity.this.databaseHelper.updateMovie(params[0]);
         }
 
         protected void onPostExecute(Integer res) {
         }
-    }
-
-    public static Intent newIntent(Context context, Movie movie) {
-        Intent intent = new Intent(context, MovieActivity.class);
-        intent.putExtra(EXTRA_MOVIE, movie);
-        return intent;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,9 +177,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_share) {
             String text;
             if (this.checkBoxWatched.isChecked()) {
-                text = String.format(getString(R.string.share_watched_movie), new Object[]{this.movie.getTitle()});
+                text = String.format(getString(R.string.share_watched_movie), this.movie.getTitle());
             } else {
-                text = String.format(getString(R.string.share_non_watched_movie), new Object[]{this.movie.getTitle()});
+                text = String.format(getString(R.string.share_non_watched_movie), this.movie.getTitle());
             }
             Intent intent = new Intent("android.intent.action.SEND");
             intent.putExtra("android.intent.extra.TEXT", text);

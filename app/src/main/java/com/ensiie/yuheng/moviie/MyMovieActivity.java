@@ -49,7 +49,7 @@ public class MyMovieActivity extends AppCompatActivity {
         this.textView = (TextView) findViewById(R.id.no_movie_text);
         this.spinner = (Spinner) findViewById(R.id.spinner);
 
-        ArrayList<String> filters = new ArrayList();
+        ArrayList<String> filters = new ArrayList<>();
         filters.add(getString(R.string.spinner_all_movie));
         filters.add(getString(R.string.spinner_movie_not_watched));
         filters.add(getString(R.string.spinner_movie_watched));
@@ -72,7 +72,7 @@ public class MyMovieActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         this.spinner.setSelection(getSelectedSpinner());
-        new GetMoviesTask().execute(new Integer[]{Integer.valueOf(getSelectedSpinner())});
+        new GetMoviesTask().execute(getSelectedSpinner());
     }
 
     private int getSelectedSpinner() {
@@ -87,7 +87,7 @@ public class MyMovieActivity extends AppCompatActivity {
 
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
             MyMovieActivity.this.setSelectedSpinner(position);
-            new GetMoviesTask().execute(new Integer[]{Integer.valueOf(MyMovieActivity.this.getSelectedSpinner())});
+            new GetMoviesTask().execute(MyMovieActivity.this.getSelectedSpinner());
         }
 
         public void onNothingSelected(AdapterView<?> adapterView) {
@@ -102,7 +102,7 @@ public class MyMovieActivity extends AppCompatActivity {
         }
 
         protected ArrayList<Movie> doInBackground(Integer... params) {
-            return MyMovieActivity.this.dbHelper.getAllMovie(params[0].intValue());
+            return MyMovieActivity.this.dbHelper.getAllMovie(params[0]);
         }
 
         protected void onPostExecute(ArrayList<Movie> movies) {
