@@ -73,9 +73,10 @@ public class MovieActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(0), getString(R.string.tab_title_popular));
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(1), getString(R.string.tab_title_toprated));
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(2), getString(R.string.tab_title_upcoming));
+        viewPagerAdapter.addFrag(MovieFragment.newInstance(1), getString(R.string.tab_title_popular));
+        viewPagerAdapter.addFrag(MovieFragment.newInstance(2), getString(R.string.tab_title_toprated));
+        viewPagerAdapter.addFrag(MovieFragment.newInstance(3), getString(R.string.tab_title_upcoming));
+        viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
 

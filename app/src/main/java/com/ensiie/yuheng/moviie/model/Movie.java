@@ -21,7 +21,7 @@ public class Movie implements Serializable {
     @SerializedName("release_date")
     private String releaseDate;
     @SerializedName("genre_ids")
-    private List<Integer> genreIds = new ArrayList<Integer>();
+    private List<Integer> genreIds = new ArrayList<>();
     @SerializedName("id")
     private int id;
 
@@ -38,7 +38,7 @@ public class Movie implements Serializable {
     @SerializedName("vote_average")
     private String voteAverage;
 
-    private boolean seen;
+    private boolean watched;
 
     public Movie(int id, String title, String overview, String voteAverage, String releaseDate, String posterPath,
                  String backdropPath)
@@ -53,7 +53,7 @@ public class Movie implements Serializable {
     }
 
     public Movie(int id, String title, String overview, String voteAverage, String releaseDate, String posterPath,
-                 String backdropPath, boolean seen)
+                 String backdropPath, boolean watched)
     {
         this.posterPath = posterPath;
         this.overview = overview;
@@ -62,7 +62,7 @@ public class Movie implements Serializable {
         this.title = title;
         this.backdropPath = backdropPath;
         this.voteAverage = voteAverage;
-        this.seen = seen;
+        this.watched = watched;
     }
 
     public String getPosterPath() {
@@ -145,12 +145,12 @@ public class Movie implements Serializable {
         this.video = video;
     }
 
-    public boolean isSeen() {
-        return seen;
+    public boolean isWatched() {
+        return watched;
     }
 
-    public void setSeen(boolean seen) {
-        this.seen = seen;
+    public void setWatched(boolean watched) {
+        this.watched = watched;
     }
 
     public String getVoteAverage() {

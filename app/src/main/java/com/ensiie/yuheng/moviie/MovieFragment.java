@@ -1,5 +1,6 @@
 package com.ensiie.yuheng.moviie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,9 +39,9 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     public static final int FAIL = -1;
     public static final int SUCCESS = 0;
 
-    public static final int POPULAR_MOVIES = 0;
-    public static final int TOP_RATED_MOVIES = 1;
-    public static final int UPCOMING_MOVIES = 2;
+    public static final int POPULAR_MOVIES = 1;
+    public static final int TOP_RATED_MOVIES = 2;
+    public static final int UPCOMING_MOVIES = 3;
 
     private Singleton singleton = Singleton.getINSTANCE();
 
@@ -62,16 +63,15 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     private final static String includeVideo = "false";
     private final static String releaseYear = "2016";
 
-    // 3 retrofit calls
-    Call<MovieResponse> callPopular;
-    Call<MovieResponse> callTopRated;
-    Call<MovieResponse> callUpComing;
+    // retrofit call
+    Call<MovieResponse> call;
 
     public static MovieFragment newInstance(int type) {
         Bundle bundle = new Bundle();
         bundle.putInt(EXTRA_MOVIE_TYPE, type);
         MovieFragment fragment = new MovieFragment();
         fragment.setArguments(bundle);
+        Log.d(TAG, "newInstance: ");
         return fragment;
     }
 
@@ -96,7 +96,7 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
         this.retryButton = (Button) view.findViewById(R.id.retry_button);
         this.retryButton.setOnClickListener(this.onClickListener);
 
-        this.progressBar = (ProgressBar) view.findViewById(R.id.load_progress_bar);
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         if (savedInstanceState == null || savedInstanceState.getSerializable("movie") == null) {
             if (this.moviesType == POPULAR_MOVIES && this.singleton.getPopular() != null) {
@@ -131,16 +131,19 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
         this.retryButton.setVisibility(View.GONE);
         this.progressBar.setVisibility(View.GONE);
         MovieAdapter adapter = new MovieAdapter(this.movies);
-        //adapter.setListener(this.movieClickListener);
+        adapter.setListener(movieClickListener);
         this.recyclerView.setAdapter(adapter);
         Log.d(TAG, "setAdapter: ");
     }
-    /*
-    MovieClickListener movieClickListener = new MovieClickListener() {
+
+    MovieAdapter.MovieClickListener movieClickListener = new MovieAdapter.MovieClickListener() {
         public void onMovieClickListener(Movie movie) {
-            MovieFragment.this.startActivity(MovieActivity.newIntent(MovieFragment.this.getContext(), movie));
+            Log.d(TAG, "onMovieClickListener: ");
+            Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+            intent.putExtra("extra_movie", movie);
+            startActivity(intent);
         }
-    };*/
+    };
 
     // Click and reload
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -156,15 +159,13 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
         if (this.moviesType == POPULAR_MOVIES) {
-            callPopular = apiService.getPopularMovies(API_KEY, language, sortBy, includeAdult, includeVideo, pageNumber, releaseYear);
-            callPopular.enqueue(this);
+            call = apiService.getPopularMovies(API_KEY, language, sortBy, includeAdult, includeVideo, pageNumber, releaseYear);
         } else if (this.moviesType == TOP_RATED_MOVIES) {
-            callTopRated = apiService.getTopRatedMovies(API_KEY, language, pageNumber);
-            callTopRated.enqueue(this);
+            call = apiService.getTopRatedMovies(API_KEY, language, pageNumber);
         } else {
-            callUpComing = apiService.getUpcomingMovies(API_KEY, language, pageNumber, region);
-            callUpComing.enqueue(this);
+            call = apiService.getUpcomingMovies(API_KEY, language, pageNumber, region);
         }
+        call.enqueue(this);
     }
 
     private void connectionFail() {
@@ -191,7 +192,6 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
                     MovieFragment.this.setAdapter();
                     return;
                 default:
-                    return;
             }
         }
     };
@@ -213,6 +213,7 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     @Override
     public void onFailure(Call<MovieResponse> call, Throwable t) {
         this.mHandler.sendEmptyMessage(MovieFragment.FAIL);
+        Log.e(TAG, "onFailure: "+ t.toString());
     }
 
 }

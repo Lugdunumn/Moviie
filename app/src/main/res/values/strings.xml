@@ -12,14 +12,20 @@
     <string name="no_saved_movie">Aucun film à afficher</string>
 
     <string name="spinner_all_movie">Tous mes films</string>
-    <string name="spinner_movie_not_seen">Films à voir</string>
-    <string name="spinner_movie_seen">Films déjà vu</string>
+    <string name="spinner_movie_not_watched">Films à voir</string>
+    <string name="spinner_movie_watched">Films déjà vu</string>
 
     <string name="menu_about">À propos</string>
     <string name="notice">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
     <string name="developer">Développé par Yuheng Zhao.</string>
 
+    <string name="watched">Vu</string>
     <string name="movie_desp">Movie description here.</string>
     <string name="synopsis">Synopsis</string>
     <string name="movie_name">Movie name</string>
+    <string name="date">Date de sortie"</string>
+
+    <string name="share_non_watched_movie">Ça te dit de regarder %s ?</string>
+    <string name="share_watched_movie">Faut absolument que tu regardes %s !</string>
+    <string name="share_menu_title">Partager</string>
 </resources>

@@ -4,7 +4,10 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="textColorPrimary">#3F51B5</color>
-    
-    <color name="seenStatusTint">#FFFFFF</color>
+    <!-- coulour dans le demo, mais énoncé dit FF4081  -->
+    <color name="red">#F44336</color>
+
+    <color name="watchedBackground">#64000000</color>
+    <color name="watchedStatusTint">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
 </resources>

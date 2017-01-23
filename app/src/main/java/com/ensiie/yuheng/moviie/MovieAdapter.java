@@ -1,6 +1,9 @@
 package com.ensiie.yuheng.moviie;
 
+import android.content.ClipData;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,58 +18,79 @@ import java.util.ArrayList;
  * Created by solael on 2017/1/22.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
+class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+
+    private static final String TAG = MovieAdapter.class.getSimpleName();
 
     private static final String POSTER_ROOT_URL = "https://image.tmdb.org/t/p/w300/";
 
     private ArrayList<Movie> movies;
+    private MovieClickListener listener;
 
-    public MovieAdapter(ArrayList<Movie> movies) {
+    interface MovieClickListener {
+        void onMovieClickListener(Movie movie);
+    }
+
+    MovieAdapter(ArrayList<Movie> movies) {
         this.movies = movies;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ViewGroup seenStatus;
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int itemType) {
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list, parent, false));
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.movies.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        private ViewGroup watchedStatus;
         private ImageView poster;
-        private ImageView seen;
+        private ImageView watched;
 
-        public MyViewHolder(View view) {
-            super(view);
+        ViewHolder(View itemView) {
+            super(itemView);
 
-            this.seenStatus = (ViewGroup) view.findViewById(R.id.seen_status);
-            this.poster = (ImageView) view.findViewById(R.id.poster);
-            this.seen = (ImageView) view.findViewById(R.id.seen_image);
+            this.watchedStatus = (ViewGroup) itemView.findViewById(R.id.watched_status);
+            this.poster = (ImageView) itemView.findViewById(R.id.poster);
+            this.watched = (ImageView) itemView.findViewById(R.id.watched_image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    MovieAdapter.this.listener.onMovieClickListener(MovieAdapter.this.movies.get(ViewHolder.this.getAdapterPosition()));
+                }
+            });
         }
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int itemType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list, parent, false));
-    }
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
 
-    @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
-        Movie movie = (Movie) this.movies.get(position);
-        ImageView imageView = myViewHolder.seen;
+        Movie movie = this.movies.get(position);
 
-        if (movie.isSeen()) {
+        ImageView imageView = viewHolder.watched;
+
+        if (movie.isWatched()) {
             imageView.setVisibility(View.VISIBLE);
         } else {
             imageView.setVisibility(View.GONE);
         }
 
-        ViewGroup viewGroup = myViewHolder.seenStatus;
-        if (movie.isSeen()) {
+        ViewGroup viewGroup = viewHolder.watchedStatus;
+        if (movie.isWatched()) {
             viewGroup.setVisibility(View.VISIBLE);
         } else {
             viewGroup.setVisibility(View.GONE);
         }
-        Picasso.with(myViewHolder.poster.getContext()).load(POSTER_ROOT_URL + movie.getPosterPath()).into(myViewHolder.poster);
+        Picasso.with(viewHolder.poster.getContext()).load(POSTER_ROOT_URL + movie.getPosterPath()).into(viewHolder.poster);
     }
 
-    public int getItemCount() {
-        return this.movies.size();
+    void setListener(MovieClickListener listener) {
+        this.listener = listener;
     }
 
 }

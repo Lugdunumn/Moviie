@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,54 @@ public class MyMovieActivity extends AppCompatActivity {
     private Spinner spinner;
 
     private TextView textView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_movie);
+
+        this.dbHelper = new DBHelper(this);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        this.progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        this.textView = (TextView) findViewById(R.id.no_movie_text);
+        this.spinner = (Spinner) findViewById(R.id.spinner);
+
+        ArrayList<String> filters = new ArrayList();
+        filters.add(getString(R.string.spinner_all_movie));
+        filters.add(getString(R.string.spinner_movie_not_watched));
+        filters.add(getString(R.string.spinner_movie_watched));
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.spinner, filters);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinner.setAdapter(arrayAdapter);
+        this.spinner.setOnItemSelectedListener(this.spinnerItemClickListener);
+
+        ((FloatingActionButton) findViewById(R.id.add_movie_fab)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                MyMovieActivity.this.startActivity(new Intent(MyMovieActivity.this, MovieActivity.class));
+            }
+        });
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.span_count));
+        this.recyclerView = (RecyclerView) findViewById(R.id.my_movie_rv);
+        this.recyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        this.spinner.setSelection(getSelectedSpinner());
+        new GetMoviesTask().execute(new Integer[]{Integer.valueOf(getSelectedSpinner())});
+    }
+
+    private int getSelectedSpinner() {
+        return getPreferences(0).getInt(SELECTED_SPINNER, 0);
+    }
+
+    private void setSelectedSpinner(int selectedSpinner) {
+        getPreferences(0).edit().putInt(SELECTED_SPINNER, selectedSpinner).apply();
+    }
 
     AdapterView.OnItemSelectedListener spinnerItemClickListener = new AdapterView.OnItemSelectedListener() {
 
@@ -64,10 +113,19 @@ public class MyMovieActivity extends AppCompatActivity {
             }
             MyMovieActivity.this.recyclerView.setVisibility(View.VISIBLE);
             MovieAdapter adapter = new MovieAdapter(movies);
-            //adapter.setListener(MyMovieActivity.this.itemClickListener);
+            adapter.setListener(MyMovieActivity.this.itemClickListener);
             MyMovieActivity.this.recyclerView.setAdapter(adapter);
         }
     }
+
+    MovieAdapter.MovieClickListener itemClickListener = new MovieAdapter.MovieClickListener() {
+        public void onMovieClickListener(Movie movie) {
+            Log.d(TAG, "onMovieClickListener: ");
+            Intent intent = new Intent(MyMovieActivity.this, MovieDetailActivity.class);
+            intent.putExtra("extra_movie", movie);
+            startActivity(intent);
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,51 +141,5 @@ public class MyMovieActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_movie);
 
-        this.dbHelper = new DBHelper(this);
-
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        this.progressBar = (ProgressBar) findViewById(R.id.load_db_progress_bar);
-        this.textView = (TextView) findViewById(R.id.no_movie_text);
-        this.spinner = (Spinner) findViewById(R.id.spinner);
-
-        ArrayList<String> filters = new ArrayList();
-        filters.add(getString(R.string.spinner_all_movie));
-        filters.add(getString(R.string.spinner_movie_not_seen));
-        filters.add(getString(R.string.spinner_movie_seen));
-
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.spinner, filters);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner);
-        this.spinner.setAdapter(arrayAdapter);
-        this.spinner.setOnItemSelectedListener(this.spinnerItemClickListener);
-
-        ((FloatingActionButton) findViewById(R.id.add_movie_fab)).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                MyMovieActivity.this.startActivity(new Intent(MyMovieActivity.this, MovieActivity.class));
-            }
-        });
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.span_count));
-        this.recyclerView = (RecyclerView) findViewById(R.id.my_movie_rv);
-        this.recyclerView.setLayoutManager(gridLayoutManager);
-    }
-
-    protected void onResume() {
-        super.onResume();
-        this.spinner.setSelection(getSelectedSpinner());
-        new GetMoviesTask().execute(new Integer[]{Integer.valueOf(getSelectedSpinner())});
-    }
-
-    private int getSelectedSpinner() {
-        return getPreferences(0).getInt(SELECTED_SPINNER, 0);
-    }
-
-    private void setSelectedSpinner(int selectedSpinner) {
-        getPreferences(0).edit().putInt(SELECTED_SPINNER, selectedSpinner).apply();
-    }
 }
