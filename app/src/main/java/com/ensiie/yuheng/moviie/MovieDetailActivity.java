@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ensiie.yuheng.moviie.Utils.DateUtil;
 import com.ensiie.yuheng.moviie.database.DBHelper;
 import com.ensiie.yuheng.moviie.model.Movie;
 import com.squareup.picasso.Picasso;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 public class MovieDetailActivity extends AppCompatActivity {
 
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
+
     private static final String POSTER_IMAGE_ROOT_URL = "https://image.tmdb.org/t/p/w960_and_h540_bestv2";
 
     private static final String EXTRA_MOVIE = "extra_movie";
@@ -46,7 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView date;
 
     // test case
-    Movie movie1 = new Movie(278, "The Shawshank Redemption", "26262", "7.8", "1994-09-10", "/5cIUvCJQ2aNPXRCmXiOIuJJxIki.jpg", "/xBKGJQsAIeweesB79KC89FpBrVr.jpg");
+    //Movie movie1 = new Movie(278, "The Shawshank Redemption", "26262", "7.8", "1994-09-10", "/5cIUvCJQ2aNPXRCmXiOIuJJxIki.jpg", "/xBKGJQsAIeweesB79KC89FpBrVr.jpg");
 
 
     @Override
@@ -78,14 +80,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         this.collapsingToolbar.setTitle(this.movie.getTitle());
         this.rated.setText(this.movie.getVoteAverage());
         this.overview.setText(this.movie.getOverview());
-
-        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
-        try {
-            this.date.setText(formatter.format(parser.parse(this.movie.getReleaseDate())));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.date.setText(DateUtil.toFRDateString(movie.getReleaseDate()));
 
         new GetMovieTask().execute(this.movie.getId());
     }
@@ -117,8 +112,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             return MovieDetailActivity.this.databaseHelper.addMovie(params[0]);
         }
 
-        protected void onPostExecute(Long ret) {
-            if (ret != -1) {
+        protected void onPostExecute(Long result) {
+            if (result != -1) {
                 MovieDetailActivity.this.fab.setImageResource(R.drawable.ic_delete_black_24dp);
                 MovieDetailActivity.this.checkBoxWatched.setVisibility(View.VISIBLE);
                 return;
@@ -148,11 +143,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             return MovieDetailActivity.this.databaseHelper.getMovie(params[0]);
         }
 
-        protected void onPostExecute(Movie res) {
-            if (res != null) {
+        protected void onPostExecute(Movie result) {
+            if (result != null) {
                 MovieDetailActivity.this.fab.setImageResource(R.drawable.ic_delete_black_24dp);
                 MovieDetailActivity.this.checkBoxWatched.setVisibility(View.VISIBLE);
-                MovieDetailActivity.this.checkBoxWatched.setChecked(res.isWatched());
+                MovieDetailActivity.this.checkBoxWatched.setChecked(result.isWatched());
                 return;
             }
             MovieDetailActivity.this.fab.setImageResource(R.drawable.ic_add_black_24dp);
@@ -164,7 +159,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             return MovieDetailActivity.this.databaseHelper.updateMovie(params[0]);
         }
 
-        protected void onPostExecute(Integer res) {
+        protected void onPostExecute(Integer result) {
         }
     }
 

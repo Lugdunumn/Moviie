@@ -10,6 +10,15 @@ import com.ensiie.yuheng.moviie.model.Movie;
 
 import java.util.ArrayList;
 
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_BACKDROP;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_DATE;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_ID;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_OVERVIEW;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_POSTER;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_RATE;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_TITLE;
+import static com.ensiie.yuheng.moviie.database.DBHelper.MovieColumns.MOVIE_WATCHED;
+
 /**
  * Created by solael on 2017/1/22.
  */
@@ -17,8 +26,13 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db_movie";
+
     private static final int DATABASE_VERSION = 1;
     private static final String MOVIE = "movie";
+
+    public DBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
     interface MovieColumns {
         String MOVIE_ID = "movie_id";
@@ -32,12 +46,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE movie (movie_id INTEGER PRIMARY KEY,movie_title TEXT,movie_overview TEXT,movie_rate TEXT,movie_date TEXT,movie_poster TEXT,movie_backdrop TEXT,movie_watched INTEGER)");
+        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MOVIE + " ("
+                + MOVIE_ID + " INTEGER PRIMARY KEY," +
+                MOVIE_TITLE + " TEXT," +
+                MOVIE_OVERVIEW + " TEXT," +
+                MOVIE_RATE + " TEXT," +
+                MOVIE_DATE + " TEXT," +
+                MOVIE_POSTER + " TEXT," +
+                MOVIE_BACKDROP + " TEXT," +
+                MOVIE_WATCHED + " INTEGER)";
+        db.execSQL(SQL_CREATE_MOVIE_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -48,14 +67,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public long addMovie(Movie movie) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MovieColumns.MOVIE_ID, movie.getId());
+        values.put(MOVIE_ID, movie.getId());
         values.put(MovieColumns.MOVIE_TITLE, movie.getTitle());
         values.put(MovieColumns.MOVIE_OVERVIEW, movie.getOverview());
         values.put(MovieColumns.MOVIE_RATE, movie.getVoteAverage());
         values.put(MovieColumns.MOVIE_DATE, movie.getReleaseDate());
         values.put(MovieColumns.MOVIE_POSTER, movie.getPosterPath());
         values.put(MovieColumns.MOVIE_BACKDROP, movie.getBackdropPath());
-        values.put(MovieColumns.MOVIE_WATCHED, movie.isWatched() ? DATABASE_VERSION : 0);
+        values.put(MovieColumns.MOVIE_WATCHED, movie.isWatched() ? 1 : 0);
         long res = db.insert(MOVIE, null, values);
         db.close();
         return res;
@@ -68,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM movie where movie_id=" + movieId, null);
 
         if (cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MovieColumns.MOVIE_ID));
+            int id = cursor.getInt(cursor.getColumnIndex(MOVIE_ID));
             String title = cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_TITLE));
             String overview = cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_OVERVIEW));
             String voteAverage = cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_RATE));
@@ -97,7 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                movies.add(new Movie(cursor.getInt(cursor.getColumnIndex(MovieColumns.MOVIE_ID)),
+                movies.add(new Movie(cursor.getInt(cursor.getColumnIndex(MOVIE_ID)),
                         cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_TITLE)),
                         cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_OVERVIEW)),
                         cursor.getString(cursor.getColumnIndex(MovieColumns.MOVIE_RATE)),
@@ -116,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MovieColumns.MOVIE_ID, movie.getId());
+        values.put(MOVIE_ID, movie.getId());
         values.put(MovieColumns.MOVIE_TITLE, movie.getTitle());
         values.put(MovieColumns.MOVIE_OVERVIEW, movie.getOverview());
         values.put(MovieColumns.MOVIE_RATE, movie.getVoteAverage());
