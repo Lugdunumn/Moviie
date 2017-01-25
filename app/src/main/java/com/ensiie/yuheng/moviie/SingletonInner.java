@@ -2,28 +2,32 @@ package com.ensiie.yuheng.moviie;
 
 import com.ensiie.yuheng.moviie.model.Movie;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by solael on 2017/1/21.
  */
 
-class Singleton {
-    private static Singleton INSTANCE = new Singleton();
-    private static final String TAG = Singleton.class.getSimpleName();
+// Inner singleton is more safe
+public class SingletonInner {
+
+    private static final String TAG = SingletonInner.class.getSimpleName();
 
     private ArrayList<Movie> popular;
     private ArrayList<Movie> topRated;
     private ArrayList<Movie> upComing;
 
-    private Singleton() {
+
+    private SingletonInner() {
 
     }
 
-    static Singleton getINSTANCE() {
-        return INSTANCE;
+    private static class SingletonHolder {
+        private static SingletonInner INSTANCE = new SingletonInner();
+    }
+
+    public static SingletonInner getINSTANCE() {
+        return SingletonHolder.INSTANCE;
     }
 
     ArrayList<Movie> getPopular() {

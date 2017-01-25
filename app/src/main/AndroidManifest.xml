@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MyMovieActivity"
+            android:name=".MyMoviesActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             android:name=".MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MovieActivity"
+            android:name=".MoviesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AboutActivity"

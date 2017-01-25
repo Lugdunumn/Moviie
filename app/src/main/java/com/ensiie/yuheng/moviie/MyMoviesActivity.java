@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,9 +25,9 @@ import com.ensiie.yuheng.moviie.model.Movie;
 
 import java.util.ArrayList;
 
-public class MyMovieActivity extends AppCompatActivity {
+public class MyMoviesActivity extends AppCompatActivity {
 
-    private static final String TAG = MyMovieActivity.class.getSimpleName();
+    private static final String TAG = MyMoviesActivity.class.getSimpleName();
     private static final String SELECTED_SPINNER_ITEM = "selected_spinner";
     private DBHelper dbHelper;
 
@@ -43,7 +42,7 @@ public class MyMovieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_movie);
+        setContentView(R.layout.activity_my_movies);
 
         this.dbHelper = new DBHelper(this);
         //disable title moviie
@@ -65,10 +64,10 @@ public class MyMovieActivity extends AppCompatActivity {
 
         this.spinner.setAdapter(spinnerArrayAdapter);
         this.spinner.setOnItemSelectedListener(this.spinnerItemClickListener);
-        // go to MovieActivity
+        // go to MoviesActivity
         ((FloatingActionButton) findViewById(R.id.add_movie_fab)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                MyMovieActivity.this.startActivity(new Intent(MyMovieActivity.this, MovieActivity.class));
+                MyMoviesActivity.this.startActivity(new Intent(MyMoviesActivity.this, MoviesActivity.class));
             }
         });
 
@@ -96,43 +95,43 @@ public class MyMovieActivity extends AppCompatActivity {
     AdapterView.OnItemSelectedListener spinnerItemClickListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-            MyMovieActivity.this.storeSpinnerIndex(position);
-            new GetMoviesTask().execute(MyMovieActivity.this.getSpinnerIndex());
+            MyMoviesActivity.this.storeSpinnerIndex(position);
+            new GetMoviesTask().execute(MyMoviesActivity.this.getSpinnerIndex());
         }
 
         public void onNothingSelected(AdapterView<?> adapterView) {
 
         }
     };
-    // before
+
     public class GetMoviesTask extends AsyncTask<Integer, Void, ArrayList<Movie>> {
         protected void onPreExecute() {
-            MyMovieActivity.this.progressBar.setVisibility(View.VISIBLE);
-            MyMovieActivity.this.recyclerView.setVisibility(View.GONE);
-            MyMovieActivity.this.textView.setVisibility(View.GONE);
+            MyMoviesActivity.this.progressBar.setVisibility(View.VISIBLE);
+            MyMoviesActivity.this.recyclerView.setVisibility(View.GONE);
+            MyMoviesActivity.this.textView.setVisibility(View.GONE);
         }
 
         protected ArrayList<Movie> doInBackground(Integer... params) {
-            return MyMovieActivity.this.dbHelper.getAllMovie(params[0]);
+            return MyMoviesActivity.this.dbHelper.getAllMovie(params[0]);
         }
 
         protected void onPostExecute(ArrayList<Movie> movies) {
-            MyMovieActivity.this.progressBar.setVisibility(View.GONE);
+            MyMoviesActivity.this.progressBar.setVisibility(View.GONE);
             if (movies.isEmpty()) {
-                MyMovieActivity.this.textView.setVisibility(View.VISIBLE);
+                MyMoviesActivity.this.textView.setVisibility(View.VISIBLE);
                 return;
             }
-            MyMovieActivity.this.recyclerView.setVisibility(View.VISIBLE);
+            MyMoviesActivity.this.recyclerView.setVisibility(View.VISIBLE);
             MovieAdapter adapter = new MovieAdapter(movies);
-            adapter.setListener(MyMovieActivity.this.itemClickListener);
-            MyMovieActivity.this.recyclerView.setAdapter(adapter);
+            adapter.setListener(MyMoviesActivity.this.itemClickListener);
+            MyMoviesActivity.this.recyclerView.setAdapter(adapter);
         }
     }
 
     MovieAdapter.MovieClickListener itemClickListener = new MovieAdapter.MovieClickListener() {
         public void onMovieClickListener(Movie movie) {
             Log.d(TAG, "onMovieClickListener: ");
-            Intent intent = new Intent(MyMovieActivity.this, MovieDetailActivity.class);
+            Intent intent = new Intent(MyMoviesActivity.this, MovieDetailActivity.class);
             intent.putExtra("extra_movie", movie);
             startActivity(intent);
         }

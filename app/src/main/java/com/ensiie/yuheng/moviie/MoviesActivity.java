@@ -15,12 +15,10 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Callback;
 
+public class MoviesActivity extends AppCompatActivity {
 
-public class MovieActivity extends AppCompatActivity {
-
-    private final static String TAG = MovieActivity.class.getSimpleName();
+    private final static String TAG = MoviesActivity.class.getSimpleName();
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -58,7 +56,7 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie);
+        setContentView(R.layout.activity_movies);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.movie_title);
@@ -68,9 +66,9 @@ public class MovieActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(1), getString(R.string.tab_title_popular));
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(2), getString(R.string.tab_title_toprated));
-        viewPagerAdapter.addFrag(MovieFragment.newInstance(3), getString(R.string.tab_title_upcoming));
+        viewPagerAdapter.addFrag(MoviesFragment.newInstance(1), getString(R.string.tab_title_popular));
+        viewPagerAdapter.addFrag(MoviesFragment.newInstance(2), getString(R.string.tab_title_toprated));
+        viewPagerAdapter.addFrag(MoviesFragment.newInstance(3), getString(R.string.tab_title_upcoming));
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);

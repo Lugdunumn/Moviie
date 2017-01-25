@@ -31,11 +31,11 @@ import retrofit2.Response;
  * Created by solael on 2017/1/21.
  */
 
-public class MovieFragment extends Fragment implements Callback<MovieResponse> {
+public class MoviesFragment extends Fragment implements Callback<MovieResponse> {
 
-    private static final String TAG = MovieFragment.class.getSimpleName();
+    private static final String TAG = MoviesFragment.class.getSimpleName();
 
-    private static final String EXTRA_MOVIE_TYPE = "extra_movies_type";
+    private static final String MOVIES_PAGE = "movies_page";
     public static final int FAIL = -1;
     public static final int SUCCESS = 0;
 
@@ -43,14 +43,14 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     public static final int TOP_RATED_MOVIES = 2;
     public static final int UPCOMING_MOVIES = 3;
 
-    private Singleton singleton = Singleton.getINSTANCE();
+    private SingletonInner singleton = SingletonInner.getINSTANCE();
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private Button retryButton;
 
     private ArrayList<Movie> movies;
-    private int moviesType;
+    private int moviesPage;
 
 
     // API constants
@@ -66,19 +66,20 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     // retrofit call
     Call<MovieResponse> call;
 
-    public static MovieFragment newInstance(int type) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(EXTRA_MOVIE_TYPE, type);
-        MovieFragment fragment = new MovieFragment();
-        fragment.setArguments(bundle);
-        Log.d(TAG, "newInstance: ");
+    public static MoviesFragment newInstance(int page) {
+
+        MoviesFragment fragment = new MoviesFragment();
+        Bundle args = new Bundle();
+        args.putInt(MOVIES_PAGE, page);
+        fragment.setArguments(args);
+        Log.d(TAG, "new MoviesFragment Instance: ");
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.moviesType = getArguments().getInt(EXTRA_MOVIE_TYPE);
+        this.moviesPage = getArguments().getInt(MOVIES_PAGE);
         Log.d(TAG, "onCreate: ");
     }
 
@@ -86,7 +87,7 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_movie, null, false);
+        View view = inflater.inflate(R.layout.fragment_movies, null, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), getActivity().getResources().getInteger(R.integer.span_count));
 
         Log.d(TAG, "onCreateView: ");
@@ -99,11 +100,11 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
         this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         if (savedInstanceState == null || savedInstanceState.getSerializable("movie") == null) {
-            if (this.moviesType == POPULAR_MOVIES && this.singleton.getPopular() != null) {
+            if (this.moviesPage == POPULAR_MOVIES && this.singleton.getPopular() != null) {
                 this.movies = this.singleton.getPopular();
-            } else if (this.moviesType == TOP_RATED_MOVIES && this.singleton.getTopRated() != null) {
+            } else if (this.moviesPage == TOP_RATED_MOVIES && this.singleton.getTopRated() != null) {
                 this.movies = this.singleton.getTopRated();
-            } else if (this.moviesType == UPCOMING_MOVIES && this.singleton.getUpComing() != null) {
+            } else if (this.moviesPage == UPCOMING_MOVIES && this.singleton.getUpComing() != null) {
                 this.movies = this.singleton.getUpComing();
             }
             if (this.movies != null) {
@@ -148,9 +149,9 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     // Click and reload
     View.OnClickListener onClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            MovieFragment.this.retryButton.setVisibility(View.GONE);
-            MovieFragment.this.progressBar.setVisibility(View.VISIBLE);
-            MovieFragment.this.callAPIService();
+            MoviesFragment.this.retryButton.setVisibility(View.GONE);
+            MoviesFragment.this.progressBar.setVisibility(View.VISIBLE);
+            MoviesFragment.this.callAPIService();
         }
     };
 
@@ -158,9 +159,9 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        if (this.moviesType == POPULAR_MOVIES) {
+        if (this.moviesPage == POPULAR_MOVIES) {
             call = apiService.getPopularMovies(API_KEY, language, sortBy, includeAdult, includeVideo, pageNumber, releaseYear);
-        } else if (this.moviesType == TOP_RATED_MOVIES) {
+        } else if (this.moviesPage == TOP_RATED_MOVIES) {
             call = apiService.getTopRatedMovies(API_KEY, language, pageNumber);
         } else {
             call = apiService.getUpcomingMovies(API_KEY, language, pageNumber, region);
@@ -177,19 +178,19 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
 
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MovieFragment.FAIL:
-                    MovieFragment.this.connectionFail();
+                case MoviesFragment.FAIL:
+                    MoviesFragment.this.connectionFail();
                     return;
-                case MovieFragment.SUCCESS:
-                    MovieFragment.this.movies = (ArrayList) msg.obj;
-                    if (MovieFragment.this.moviesType == POPULAR_MOVIES) {
-                        MovieFragment.this.singleton.setPopular(MovieFragment.this.movies);
-                    } else if (MovieFragment.this.moviesType == TOP_RATED_MOVIES) {
-                        MovieFragment.this.singleton.setTopRated(MovieFragment.this.movies);
-                    } else if (MovieFragment.this.moviesType == UPCOMING_MOVIES) {
-                        MovieFragment.this.singleton.setUpComing(MovieFragment.this.movies);
+                case MoviesFragment.SUCCESS:
+                    MoviesFragment.this.movies = (ArrayList) msg.obj;
+                    if (MoviesFragment.this.moviesPage == POPULAR_MOVIES) {
+                        MoviesFragment.this.singleton.setPopular(MoviesFragment.this.movies);
+                    } else if (MoviesFragment.this.moviesPage == TOP_RATED_MOVIES) {
+                        MoviesFragment.this.singleton.setTopRated(MoviesFragment.this.movies);
+                    } else if (MoviesFragment.this.moviesPage == UPCOMING_MOVIES) {
+                        MoviesFragment.this.singleton.setUpComing(MoviesFragment.this.movies);
                     }
-                    MovieFragment.this.setAdapter();
+                    MoviesFragment.this.setAdapter();
                     return;
                 default:
             }
@@ -199,7 +200,7 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
     @Override
     public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
         if (!response.isSuccessful()) {
-            this.mHandler.sendEmptyMessage(MovieFragment.FAIL);
+            this.mHandler.sendEmptyMessage(MoviesFragment.FAIL);
         } else {
             List<Movie> movies = response.body().getResults();
             Log.d(TAG, "Number of movies received: " + movies.size());
@@ -212,7 +213,7 @@ public class MovieFragment extends Fragment implements Callback<MovieResponse> {
 
     @Override
     public void onFailure(Call<MovieResponse> call, Throwable t) {
-        this.mHandler.sendEmptyMessage(MovieFragment.FAIL);
+        this.mHandler.sendEmptyMessage(MoviesFragment.FAIL);
         Log.e(TAG, "onFailure: "+ t.toString());
     }
 
