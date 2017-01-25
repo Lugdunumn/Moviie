@@ -2,6 +2,7 @@ package com.ensiie.yuheng.moviie;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -71,7 +72,12 @@ public class MyMoviesActivity extends AppCompatActivity {
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.span_count));
+        int column_number = getResources().getInteger(R.integer.column_number_portrait);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            column_number = getResources().getInteger(R.integer.column_number_landscape);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, column_number);
         this.recyclerView = (RecyclerView) findViewById(R.id.my_movie_rv);
         this.recyclerView.setLayoutManager(gridLayoutManager);
     }

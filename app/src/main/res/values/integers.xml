@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <integer name="span_count">2</integer>
+    <integer name="column_number_portrait">2</integer>
+    <integer name="column_number_landscape">3</integer>
 </resources>

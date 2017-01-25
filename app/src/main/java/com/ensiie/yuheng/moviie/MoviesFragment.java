@@ -1,6 +1,7 @@
 package com.ensiie.yuheng.moviie;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -88,7 +89,13 @@ public class MoviesFragment extends Fragment implements Callback<MovieResponse> 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_movies, null, false);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), getActivity().getResources().getInteger(R.integer.span_count));
+
+        int column_number = getResources().getInteger(R.integer.column_number_portrait);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            column_number = getResources().getInteger(R.integer.column_number_landscape);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), column_number);
 
         Log.d(TAG, "onCreateView: ");
         this.recyclerView = (RecyclerView) view.findViewById(R.id.fragment_movie_rv);
