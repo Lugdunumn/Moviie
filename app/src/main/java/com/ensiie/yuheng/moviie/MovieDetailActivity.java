@@ -19,10 +19,15 @@ import android.widget.TextView;
 import com.ensiie.yuheng.moviie.Utils.DateUtil;
 import com.ensiie.yuheng.moviie.database.DBHelper;
 import com.ensiie.yuheng.moviie.model.Movie;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import static com.squareup.picasso.MemoryPolicy.NO_CACHE;
+import static com.squareup.picasso.MemoryPolicy.NO_STORE;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -60,22 +65,26 @@ public class MovieDetailActivity extends AppCompatActivity {
         this.movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
         //this.movie = movie1;
 
-        this.collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        this.toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
-        this.image = (ImageView) findViewById(R.id.detail_poster_image);
+        this.image = findViewById(R.id.detail_poster_image);
 
-        this.checkBoxWatched = (CheckBox) findViewById(R.id.watched_checkbox);
-        this.fab = (FloatingActionButton) findViewById(R.id.fab_save_movie);
-        this.overview = (TextView) findViewById(R.id.overview_desp);
-        this.progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        this.rated = (TextView) findViewById(R.id.rated);
-        this.date = (TextView) findViewById(R.id.date);
+        this.checkBoxWatched = findViewById(R.id.watched_checkbox);
+        this.fab = findViewById(R.id.fab_save_movie);
+        this.overview = findViewById(R.id.overview_desp);
+        this.progressBar = findViewById(R.id.progress_bar);
+        this.rated = findViewById(R.id.rated);
+        this.date = findViewById(R.id.date);
 
         this.fab.setOnClickListener(this.buttonClickListener);
         this.checkBoxWatched.setOnCheckedChangeListener(this.checkBoxListener);
 
-        Picasso.with(this).load(POSTER_IMAGE_ROOT_URL + this.movie.getBackdropPath()).into(this.image);
+        Picasso
+                .with(this)
+                .load(POSTER_IMAGE_ROOT_URL + this.movie.getBackdropPath())
+                .memoryPolicy(NO_CACHE, NO_STORE)
+                .into(this.image);
 
         this.collapsingToolbar.setTitle(this.movie.getTitle());
         this.rated.setText(this.movie.getVoteAverage());
