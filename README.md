@@ -2,7 +2,7 @@
 
 Screenshots :
 
-Weird image capture tool bug :(
+Weird screen capture tool bug got bad colors. :(
 
 ![](https://github.com/solael/Moviie/blob/master/moviie.gif)
 
